@@ -2,6 +2,10 @@
 data/
 saved_models/
 
+# Work artefacts
+*.swp
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
