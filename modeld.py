@@ -14,12 +14,12 @@ class Lambda(nn.Module):
     def forward(self, x):
         return self.function(x)
 
-class ModelF(nn.Module):
+class ModelD(nn.Module):
     def __init__(self):
-        super(ModelF, self).__init__()
-        self.add_module('encoder', nn.Sequential(
-            # Accepts x,y,z, sdf(x,y,z)
-            nn.Linear(in_features = 4, out_features = SDF_NET_BREADTH),
+        super(ModelD, self).__init__()
+        self.add_module('discriminator', nn.Sequential(
+            # accepts w
+            nn.Linear(in_features =SDF_NET_BREADTH, out_features = SDF_NET_BREADTH),
             nn.ReLU(inplace=True),
 
             nn.Linear(in_features = SDF_NET_BREADTH, out_features = SDF_NET_BREADTH),
@@ -28,11 +28,12 @@ class ModelF(nn.Module):
             nn.Linear(in_features = SDF_NET_BREADTH, out_features = SDF_NET_BREADTH),
             nn.ReLU(inplace=True),
 
-            nn.Linear(in_features = SDF_NET_BREADTH, out_features = SDF_NET_BREADTH),
+            # TODO: change output function to P(w = true)
+            nn.Linear(in_features = SDF_NET_BREADTH, out_features = 1),
             nn.ReLU(inplace=True) 
         ))
         self.cuda()
 
-    def forward(self, psdf):
-        psdf = psdf.cuda()
-        return self.encoder(psdf)
+    def forward(self, w):
+        w = w.cuda()
+        return self.discriminator(w)
